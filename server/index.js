@@ -26,7 +26,7 @@ massive({
 }).then(db => {
   app.set('db', db);
   console.log('db connected')
-});
+}).catch(err=> console.log(err));
 
 //async and await take the place of .then and .catch
 //but they do the same thing
@@ -91,6 +91,22 @@ app.post ('/auth/login', async (req, res) =>{
     return res.status(401).send('Incorrect password!')
   }
 })
+
+//would need to add function to front end to send user to the home/login screen
+app.get('/auth/login', (req, res) =>{
+  req.session.destroy()
+  res.sendStatus(200)
+})
+
+app.get('/auth/user', (req, res)=>{
+  if (req.session.user){
+    res.status(200).send(req.session.user)
+  } else {
+    res.status(401).send(`Please Log In`)
+  }
+})
+
+
 
 app.listen(SERVER_PORT, () => {
   console.log(`Listening on port: ${SERVER_PORT}`);

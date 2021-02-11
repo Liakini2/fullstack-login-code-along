@@ -12,7 +12,25 @@ class App extends Component {
     };
   }
 
-  async login() {}
+  componentDidMount(){
+    axios.get('/auth/user').then(res=>{
+      this.setState({
+        loggedInUser: res.data
+      })
+    }).catch(err => console.log(err))
+  }
+
+  async login() {
+    let {email, password} = this.state
+    let res = await axios.post('/auth/login', {email,password})
+    
+    //res.data is the user session information.
+    this.setState({
+      loggedInUser: res.data,
+      email: '',
+      password: ''
+    })
+  }
 
   async signup() {
     let { email, password} = this.state
@@ -20,7 +38,14 @@ class App extends Component {
     this.setState({loggedInUser: res.data, email: '', password: ''})
   }
 
-  logout() {}
+  logout() {
+    axios.get(`/auth/logout`)
+    this.setState({
+      loggedInUser: []
+    })
+    //we would use this to switch views
+    // this.props.history.push('')
+  }
 
   render() {
     let { loggedInUser, email, password } = this.state;
