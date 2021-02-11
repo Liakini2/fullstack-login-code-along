@@ -14,7 +14,11 @@ class App extends Component {
 
   async login() {}
 
-  async signup() {}
+  async signup() {
+    let { email, password} = this.state
+    let res = await axios.post('/auth/signup', {email, password})
+    this.setState({loggedInUser: res.data, email: '', password: ''})
+  }
 
   logout() {}
 
